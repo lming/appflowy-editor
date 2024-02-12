@@ -21,7 +21,11 @@ class DocumentMarkdownDecoder extends Converter<String, Document> {
 
   @override
   Document convert(String input) {
-    final lines = input.split('\n');
+    // Use String.split('\n') would create an unnecessary extra empty paragraph at the end of the file.
+    //final lines = input.split('\n');
+    // LineSplitter's behavior is correct
+    final lines = LineSplitter.split(input).toList();
+
     final document = Document.blank();
     // In the below while loop we iterate through each line of the input markdown
     // if the line starts with ``` it means there are chances it may be a code block
@@ -146,11 +150,20 @@ class DocumentMarkdownDecoder extends Converter<String, Document> {
   }
 
   int getIndentLevel(String line) {
-    int indent = 0;
-    while (indent < line.length && line[indent] == ' ') {
-      indent++;
+    // support indent using spaces and/or tabs.
+    int spaces = 0;
+    int tabs = 0;
+    for (var idx = 0; idx < line.length; idx++) {
+      final char = line[idx];
+      if (char == '\t') {
+        tabs++;
+      } else if (char == ' ') {
+        spaces++;
+      } else {
+        break;
+      }
     }
-    return (indent / 2).floor();
+    return tabs + spaces ~/ 2;
   }
 
   Node convertLineToNode(
@@ -168,7 +181,22 @@ class DocumentMarkdownDecoder extends Converter<String, Document> {
     }
 
     // Heading Style
-    if (line.startsWith('### ')) {
+    if (line.startsWith('###### ')) {
+      return headingNode(
+        level: 6,
+        attributes: {'delta': decoder.convert(line.substring(7)).toJson()},
+      );
+    } else if (line.startsWith('##### ')) {
+      return headingNode(
+        level: 5,
+        attributes: {'delta': decoder.convert(line.substring(6)).toJson()},
+      );
+    } else if (line.startsWith('#### ')) {
+      return headingNode(
+        level: 4,
+        attributes: {'delta': decoder.convert(line.substring(5)).toJson()},
+      );
+    } else if (line.startsWith('### ')) {
       return headingNode(
         level: 3,
         attributes: {'delta': decoder.convert(line.substring(4)).toJson()},

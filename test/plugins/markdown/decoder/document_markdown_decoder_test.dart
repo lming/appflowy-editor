@@ -366,12 +366,6 @@ void main() async {
             "url": "path/to/image.png",
             "align": "center"
           }
-      },
-      {
-        "type": "paragraph",
-        "data": {
-          "delta": []
-        }
       }
     ]
   }
@@ -482,12 +476,6 @@ void main() async {
               "insert": "hello world"
             }
           ]
-        }
-      },
-      {
-        "type": "paragraph",
-        "data": {
-          "delta": []
         }
       }
     ]
@@ -616,12 +604,6 @@ void main() async {
           ],
           "level": 1
         }
-      },
-      {
-        "type": "paragraph",
-        "data": {
-          "delta": []
-        }
       }
     ]
   }
@@ -748,8 +730,7 @@ void main() async {
       {
         "type": "numbered_list",
         "data": {"delta": [{"insert": "Back to top level"}]}
-      },
-      {"type": "paragraph", "data": {"delta": []}}
+      }
     ]
   }
 }
