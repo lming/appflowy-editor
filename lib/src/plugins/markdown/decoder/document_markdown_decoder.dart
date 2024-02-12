@@ -25,6 +25,9 @@ class DocumentMarkdownDecoder extends Converter<String, Document> {
     //final lines = input.split('\n');
     // LineSplitter's behavior is correct
     final lines = LineSplitter.split(input).toList();
+    if (lines.isEmpty) {
+      return Document.blank(withInitialText: true);
+    }
 
     final document = Document.blank();
     // In the below while loop we iterate through each line of the input markdown
